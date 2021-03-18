@@ -18,11 +18,24 @@ describe('Buying Products', function () {
 
   })
 
-  it('should add products for the cart', function () {
+  it('should add cashews for the cart', function () {
     cy.visit("https://rahulshettyacademy.com/seleniumPractise/#/")
     cy.get('.search-keyword').type('ca')
     cy.wait(2000)
-    cy.get('.products').find('.product').contains('Carrot - 1 Kg').should('have.text', 'Carrot - 1 Kg')
+
+    //Iterating over the products to find Cashews
+    cy.get('.products').find('.product').each(($el, index, $list) => {
+      // $el is a wrapped jQuery element
+      if ($el.find('h4.product-name').text().includes('Cashews')) {
+        // wrap this element so we can
+        // use cypress commands on it
+        cy.wrap($el.find('button')).click()
+      }
+    })
+    cy.get(':nth-child(1) > :nth-child(3) > strong').should('have.text', '1')
+    //cy.contains('ADD TO CART').click()
+    cy.get('.cart-icon > img').click()
+    cy.contains('PROCEED TO CHECKOUT').click()
 
   })
 
